@@ -8,3 +8,6 @@
 local.properties
 *.iml
 .gradle
+
+/AdvancedExample/app/build
+.DS_Store
