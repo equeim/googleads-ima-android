@@ -86,58 +86,61 @@ public class VideoPlayerController {
             }
           });
       adsManager.addAdEventListener(
-          new AdEvent.AdEventListener() {
-            /** Responds to AdEvents. */
-            @Override
-            public void onAdEvent(AdEvent adEvent) {
-              if (adEvent.getType() != AdEvent.AdEventType.AD_PROGRESS) {
-                log("Event: " + adEvent.getType());
-              }
+              new DelegatingAdEventListener(
+                      new AdEvent.AdEventListener() {
+                        /** Responds to AdEvents. */
+                        @Override
+                        public void onAdEvent(AdEvent adEvent) {
+                          if (adEvent.getType() != AdEvent.AdEventType.AD_PROGRESS) {
+                            log("Event: " + adEvent.getType());
+                          }
 
-              // These are the suggested event types to handle. For full list of all ad
-              // event types, see the documentation for AdEvent.AdEventType.
-              switch (adEvent.getType()) {
-                case LOADED:
-                  // AdEventType.LOADED will be fired when ads are ready to be
-                  // played. AdsManager.start() begins ad playback. This method is
-                  // ignored for VMAP or ad rules playlists, as the SDK will
-                  // automatically start executing the playlist.
-                  adsManager.start();
-                  break;
-                case CONTENT_PAUSE_REQUESTED:
-                  // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before
-                  // a video ad is played.
-                  pauseContent();
-                  break;
-                case CONTENT_RESUME_REQUESTED:
-                  // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is
-                  // completed and you should start playing your content.
-                  resumeContent();
-                  break;
-                case PAUSED:
-                  isAdPlaying = false;
-                  videoPlayerWithAdPlayback.enableControls();
-                  break;
-                case RESUMED:
-                  isAdPlaying = true;
-                  videoPlayerWithAdPlayback.disableControls();
-                  break;
-                case ALL_ADS_COMPLETED:
-                  if (adsManager != null) {
-                    adsManager.destroy();
-                    adsManager = null;
-                  }
-                  adsLoader.release();
-                  break;
-                case AD_BREAK_FETCH_ERROR:
-                  log("Ad Fetch Error. Resuming content.");
-                  // A CONTENT_RESUME_REQUESTED event should follow to trigger content playback.
-                  break;
-                default:
-                  break;
-              }
-            }
-          });
+                          // These are the suggested event types to handle. For full list of all ad
+                          // event types, see the documentation for AdEvent.AdEventType.
+                          switch (adEvent.getType()) {
+                            case LOADED:
+                              // AdEventType.LOADED will be fired when ads are ready to be
+                              // played. AdsManager.start() begins ad playback. This method is
+                              // ignored for VMAP or ad rules playlists, as the SDK will
+                              // automatically start executing the playlist.
+                              adsManager.start();
+                              break;
+                            case CONTENT_PAUSE_REQUESTED:
+                              // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before
+                              // a video ad is played.
+                              pauseContent();
+                              break;
+                            case CONTENT_RESUME_REQUESTED:
+                              // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is
+                              // completed and you should start playing your content.
+                              resumeContent();
+                              break;
+                            case PAUSED:
+                              isAdPlaying = false;
+                              videoPlayerWithAdPlayback.enableControls();
+                              break;
+                            case RESUMED:
+                              isAdPlaying = true;
+                              videoPlayerWithAdPlayback.disableControls();
+                              break;
+                            case ALL_ADS_COMPLETED:
+                              if (adsManager != null) {
+                                adsManager.destroy();
+                                adsManager = null;
+                              }
+                              adsLoader.release();
+                              break;
+                            case AD_BREAK_FETCH_ERROR:
+                              log("Ad Fetch Error. Resuming content.");
+                              // A CONTENT_RESUME_REQUESTED event should follow to trigger content playback.
+                              break;
+                            default:
+                              break;
+                          }
+                        }
+                      }
+              )
+          );
       AdsRenderingSettings adsRenderingSettings =
           ImaSdkFactory.getInstance().createAdsRenderingSettings();
       adsRenderingSettings.setPlayAdsAfterTime(playAdsAfterTime);
