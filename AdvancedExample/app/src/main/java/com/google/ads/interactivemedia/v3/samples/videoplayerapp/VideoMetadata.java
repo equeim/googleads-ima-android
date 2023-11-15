@@ -33,10 +33,7 @@ public enum VideoMetadata {
   VMAP(
       "https://storage.googleapis.com/gvabox/media/samples/stock.mp4",
       "VMAP",
-      "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/"
-          + "vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpremidpost&ciu_szs=300x250&"
-          + "gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&"
-          + "cmsid=496&vid=short_onecue&correlator=",
+      "https://opencdn.b-cdn.net/pub/5.0/e-v-1/vmap_ad_sample.xml",
       R.drawable.thumbnail1,
       true),
   VMAP_PODS(
